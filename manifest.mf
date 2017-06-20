@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+SplashScreen-Image: EstradaC\src\Imagenes\Corposoft_412x320px.png
+X-COMMENT: Main-Class will be added automatically by build
+

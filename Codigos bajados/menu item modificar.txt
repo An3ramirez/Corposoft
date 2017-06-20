@@ -1,0 +1,10 @@
+int fila=jTable1.getSelectedRow();
+    if(fila>=0){
+        jTextField1.setText(jTable1.getValueAt(fila,0).toString());
+         jTextField2.setText(jTable1.getValueAt(fila,1).toString());
+      id = jTable1.getValueAt(fila,0).toString();
+           
+    }
+    else{
+        JOptionPane.showMessageDialog(null,"No se encontro fila");
+    }

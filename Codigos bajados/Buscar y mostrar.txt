@@ -1,0 +1,33 @@
+ void mostrardatos(String valor){
+        conectar cc=new conectar();
+        Connection cn=cc.conexion();
+        DefaultTableModel modelo=new DefaultTableModel();
+       
+        modelo.addColumn("Id");
+         modelo.addColumn("Nombre");
+          
+        jTable1.setModel(modelo);
+        String sql="";
+        if (valor.equals(""))
+        {
+            sql="SELECT * FROM idconexion";
+        }
+        else{
+            sql="SELECT * FROM idconexion WHERE (id='"+valor+"'  OR nombre='"+valor+"')";
+        }  
+        
+        String []datos=new String [2];
+        try{
+            Statement st=cn.createStatement();
+            ResultSet rs=st.executeQuery(sql);
+            while(rs.next()){
+            datos[0]=rs.getString(1);
+            datos[1]=rs.getString(2);
+            
+            modelo.addRow(datos);
+            }
+            jTable1.setModel(modelo);
+        }catch(SQLException ex){
+            Logger.getLogger(datos.class.getName()).log(Level.SEVERE,null,ex);
+        }
+    }

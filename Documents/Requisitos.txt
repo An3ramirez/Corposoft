@@ -1,0 +1,13 @@
+FACTURA INDIVIDUAL:
+1. Manejar los logos y numero NIT
+2. Dirección: Cl 59D #2A-05 Of 102 B/El Saman
+3. PBX.: (2) 3425585- 322 3729022
+4. E-Mail.: estradaconsultorias@hotmail.com
+5. Adicionar celda "Otros Servicios" (debajo de plan excequial)
+
+EN LETRA MENUDA: Retirar la del powernet y Adicionar Banco Colombia a nombre de Manila Group S.A.S. Cta de Ahorro N° 51464769335.
+
+CTA DE COBRO EMPRESARIAL
+1. Conservar los mismos logos de factura individual y nit sin hacer relación del nombre comercial.
+2. Por favor contener consecutivo numérico las ctas de cobro de 001 a 1000. Por temas de impuestos la enumeración.
+3. Las ctas empresariales debe tener la misma información como dirección, tels, E-mail y otros como lo indica en la factura individual.

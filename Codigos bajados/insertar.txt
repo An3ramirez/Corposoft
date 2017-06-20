@@ -1,0 +1,19 @@
+ conectar cc=new conectar();
+    Connection cn=cc.conexion();
+        try{
+            PreparedStatement pst=cn.prepareStatement("INSERT INTO idconexion(id,nombre) VALUES(?,?)");
+            pst.setString(1,jTextField1.getText());
+            pst.setString(2,jTextField2.getText());
+            
+
+        
+        int a=pst.executeUpdate();
+        if(a>0){
+            JOptionPane.showMessageDialog(null,"Registro exitoso");
+             mostrardatos("");
+        }
+        else{
+             JOptionPane.showMessageDialog(null,"Error al agregar");
+        }
+        }catch(Exception e){
+        }        // TODO 

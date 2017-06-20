@@ -1,0 +1,11 @@
+         conectar cc=new conectar();
+Connection cn=cc.conexion();
+int fila=jTable1.getSelectedRow();
+String cod="";
+cod=jTable1.getValueAt(fila,0).toString();
+try{
+PreparedStatement pst=cn.prepareStatement("DELETE FROM idconexion WHERE id='"+cod+"'");
+pst.executeUpdate();
+mostrardatos("");// TODO add your handling code here:
+} catch (Exception e){
+}  

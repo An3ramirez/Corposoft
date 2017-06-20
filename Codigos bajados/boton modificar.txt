@@ -1,0 +1,11 @@
+    conectar cc=new conectar();
+Connection cn=cc.conexion();
+try{
+PreparedStatement pst=cn.prepareStatement("UPDATE idconexion SET nombre='"+jTextField2.getText()+"',id='"+jTextField1.getText()+"' WHERE id='"+id+"' ");
+id=jTextField1.getText();
+pst.executeUpdate();
+
+mostrardatos("");
+}catch(Exception e){
+    System.out.print(e.getMessage());
+}

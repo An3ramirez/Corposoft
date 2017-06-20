@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="89" splitType="Stretch">
+			<staticText>
+				<reportElement x="85" y="0" width="426" height="47"/>
+				<textElement>
+					<font size="36"/>
+				</textElement>
+				<text><![CDATA[Estrada Consultorias S.A.S]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="47" width="232" height="42"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Protejemos su Bienestar Social 	Nit: 900.828.642 - 8]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="66" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<image>
+				<reportElement x="229" y="15" width="119" height="89"/>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\an3-r\\Documents\\NetBeansProjects\\Corposoft\\src\\Imagenes\\contabilidad.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="79" y="0" width="432" height="42"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[PBX.: (2) 3425585- 322 3729022 E-Mail.: estradaconsultorias@hotmail.com Dirección: Cl 59D #2A-05 Of 102 B/El Saman]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

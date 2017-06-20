@@ -1,0 +1,20 @@
+pass: 4529
+
+CREATE TABLE login (
+id_user VARCHAR2(20) NOT NULL,
+tipo_user VARCHAR2(20) NOT NULL,
+password VARCHAR2(20) NOT NULL,
+UltimoIngreso VARCHAR2(25));
+
+CREATE TABLE usuario(
+id VARCHAR2(15) NOT NULL,
+numero_documento VARCHAR2(20) NOT NULL,
+nombres VARCHAR2(30) NOT NULL,
+apellido VARCHAR2(30) NOT NULL,
+fecha_nacimiento DATE NOT NULL,
+genero VARCHAR2(10) NOT NULL,
+telefono VARCHAR2(15) NOT NULL,
+email VARCHAR2(35);
+
+INSERT INTO login values('1116257972','User', 'Felipe1245','4/03/17');
+INSERT INTO login values('1116257972','Admin', 'Felipe1234','4/03/17');
