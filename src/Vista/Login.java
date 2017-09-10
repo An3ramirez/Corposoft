@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Vista;
+import Model.*;
 import Controlador.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -12,6 +13,8 @@ import java.sql.*;
 import javax.swing.*;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import org.edisoncor.gui.util.WindowsUtil;
 
 
@@ -20,22 +23,33 @@ import org.edisoncor.gui.util.WindowsUtil;
  *
  * @author an3-r
  */
-public class Login extends javax.swing.JFrame {
+public class Login extends javax.swing.JFrame implements Runnable{
     static Connection conn=null;
     static Statement st=null;
     static ResultSet rs=null;
     Metodos NombreUser=new Metodos();
+    String hora, minutos, segundos, ampm;
+    Calendar calendario;
     
-
+    java.util.Date now=new java.util.Date();
+    java.text.SimpleDateFormat sdf=new
+    java.text.SimpleDateFormat("dd-MM-yy");
+    Thread h1;
+    String fecha="";
+    
     /**
      * Creates new form Login
      */
     public Login() {
         initComponents();
         txtUsuer.grabFocus();
+        this.setTitle("Inicio de sección");
+        fecha=sdf.format(now);
+        h1 = new Thread(this);
+        h1.start();
         //PanelDatos.setOpaque(false);  para poner transparente un elemento
         
-        
+       
         
     }
     
@@ -44,72 +58,6 @@ public class Login extends javax.swing.JFrame {
         return retvalue;
     }
     
-    public void Login(){
-        String TipoUser="";
-        String id_user="";
-        String password="";
-        String validacion="";
-        //Estado slicitud variables
-        String EstadoSolicitud="";
-        
-        id_user=txtUsuer.getText();
-        password=Password.getText();
-        
-        try {
-            conn=Conexion.Enlace(conn);
-            Statement st=conn.createStatement();
-            
-            ResultSet rs=st.executeQuery("SELECT count(*) FROM login WHERE id_user='"+id_user+"' and password='"+password+"'");
-            rs.next();
-            validacion=rs.getString(1);
-            
-            
-            
-            
-        } catch (Exception e) {
-            System.out.println("Error al consultar la tabla LOGIN "+e);
-        }
-        
-        try {
-            conn=Conexion.Enlace(conn);
-            Statement st=conn.createStatement();
-            
-            ResultSet rs=st.executeQuery("SELECT tipo_user FROM login WHERE id_user='"+id_user+"' and password='"+password+"'");
-            rs.next();
-            TipoUser=rs.getString(1);
-            
-            
-        } catch (Exception e) {
-            System.out.println("Error al consultar la tabla LOGIN en el campo TIPO USUARIO");
-        }
-        
-        
-        Metodos Met=new Metodos();
-        
-        if(validacion.equals("1")&& TipoUser.equals("User")){
-            
-                DataLogin user = DataLogin.getSingletonInstance(id_user);//Mandamos el numero para saber el nombre
-                //Met.UltimoIngreso(id_user);
-                JOptionPane.showMessageDialog(null,"Bienvenido "+NombreUser.NombreUser(id_user,"cliente")+" a CorpoSoft!","BIENVENIDO",JOptionPane.INFORMATION_MESSAGE);
-            User obj=new User();
-            obj.setVisible(true);
-            dispose();
-            
-            
-        }else if(validacion.equals("1")&& TipoUser.equals("Admin") ){
-            DataLogin user = DataLogin.getSingletonInstance(id_user);//Mandamos el numero para saber el nombre
-            
-            JOptionPane.showMessageDialog(null,"Usted es un Administrador Bienvenido "+NombreUser.NombreUser(id_user,"funcionario")+" a CorpoSoft!","Administrador Bienvenido",JOptionPane.INFORMATION_MESSAGE);
-            Administrador obj=new Administrador();
-            obj.setVisible(true);
-            dispose();
-        }else{
-            JOptionPane.showMessageDialog(null,"Contraseña o Usuario Incorrecto","Error Datos Incorrectos",JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -120,53 +68,58 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         PanelDatos = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         txtUsuer = new javax.swing.JTextField();
         Password = new javax.swing.JPasswordField();
+        lblPass = new javax.swing.JLabel();
         btnEntrar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        lblUser = new javax.swing.JLabel();
         lblLogoGif = new javax.swing.JLabel();
-        lblLogoAplication = new javax.swing.JLabel();
+        lblRelog = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Inicio Sesión");
         setIconImage(getIconImage());
         setResizable(false);
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        PanelDatos.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Inicio de sesión", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Thunderstrike 3D", 0, 24))); // NOI18N
+        PanelDatos.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Inicio de sesión", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Thunderstrike", 0, 24))); // NOI18N
         PanelDatos.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel4.setText("Usuario:");
-        PanelDatos.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, -1));
-
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
-        jLabel3.setText("Contraseña:");
-        PanelDatos.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 130, -1, -1));
-
-        txtUsuer.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        txtUsuer.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        txtUsuer.setBorder(null);
+        txtUsuer.setOpaque(false);
         txtUsuer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtUsuerActionPerformed(evt);
             }
         });
-        PanelDatos.add(txtUsuer, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 230, -1));
+        PanelDatos.add(txtUsuer, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 70, 300, 50));
 
-        Password.setFont(new java.awt.Font("Arial Black", 0, 18)); // NOI18N
+        Password.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        Password.setBorder(null);
+        Password.setOpaque(false);
         Password.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
                 PasswordKeyTyped(evt);
             }
         });
-        PanelDatos.add(Password, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 120, 230, -1));
+        PanelDatos.add(Password, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 300, 50));
+
+        lblPass.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        lblPass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/pass_txt.png"))); // NOI18N
+        lblPass.setPreferredSize(new java.awt.Dimension(347, 50));
+        PanelDatos.add(lblPass, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 150, -1, -1));
 
         btnEntrar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        btnEntrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Entrar.png"))); // NOI18N
-        btnEntrar.setText("Entrar");
+        btnEntrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Aceptar/acep_norm.png"))); // NOI18N
+        btnEntrar.setBorder(null);
+        btnEntrar.setBorderPainted(false);
+        btnEntrar.setContentAreaFilled(false);
         btnEntrar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEntrar.setFocusPainted(false);
+        btnEntrar.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Aceptar/acep_press.png"))); // NOI18N
+        btnEntrar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Aceptar/acep_roll.png"))); // NOI18N
         btnEntrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnEntrarMouseClicked(evt);
@@ -177,22 +130,28 @@ public class Login extends javax.swing.JFrame {
                 btnEntrarActionPerformed(evt);
             }
         });
-        PanelDatos.add(btnEntrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 200, 96, 30));
+        PanelDatos.add(btnEntrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 230, -1, 40));
 
         btnLimpiar.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Limpiar.png"))); // NOI18N
-        btnLimpiar.setText("Limpiar");
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Limpiar/limpiar_norm.png"))); // NOI18N
+        btnLimpiar.setBorder(null);
+        btnLimpiar.setBorderPainted(false);
+        btnLimpiar.setContentAreaFilled(false);
         btnLimpiar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnLimpiar.setFocusPainted(false);
+        btnLimpiar.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Limpiar/limpiar_press.png"))); // NOI18N
+        btnLimpiar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Limpiar/limpiar_roll.png"))); // NOI18N
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiarActionPerformed(evt);
             }
         });
-        PanelDatos.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 200, 102, 30));
+        PanelDatos.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, 100, 40));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(153, 51, 0));
         jLabel1.setText("Olvide la Contraseña.");
+        jLabel1.setToolTipText("");
         jLabel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -201,9 +160,11 @@ public class Login extends javax.swing.JFrame {
         });
         PanelDatos.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, -1, -1));
 
-        getContentPane().add(PanelDatos, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 130, 439, 287));
+        lblUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/user_txt.png"))); // NOI18N
+        lblUser.setPreferredSize(new java.awt.Dimension(347, 48));
+        PanelDatos.add(lblUser, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 66, -1, 60));
 
-        lblLogoGif.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/login.gif"))); // NOI18N
+        lblLogoGif.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Logo_principal_v2.0.png"))); // NOI18N
         lblLogoGif.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         lblLogoGif.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -215,10 +176,37 @@ public class Login extends javax.swing.JFrame {
                 lblLogoGifKeyTyped(evt);
             }
         });
-        getContentPane().add(lblLogoGif, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, -1));
 
-        lblLogoAplication.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/marca de agua.fw.png"))); // NOI18N
-        getContentPane().add(lblLogoAplication, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 20, 300, 570));
+        lblRelog.setFont(new java.awt.Font("Sho-Card-Caps", 1, 36)); // NOI18N
+        lblRelog.setForeground(new java.awt.Color(0, 51, 255));
+        lblRelog.setText("00:00.00 AM");
+        lblRelog.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Fecha y hora", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Myanmar Text", 1, 18))); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(lblLogoGif, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PanelDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(lblRelog, javax.swing.GroupLayout.PREFERRED_SIZE, 470, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(30, 30, 30))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addComponent(PanelDatos, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                .addComponent(lblRelog, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
+            .addComponent(lblLogoGif, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         pack();
         setLocationRelativeTo(null);
@@ -232,8 +220,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_btnLimpiarActionPerformed
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        // Boton entrar
-        Login();
+        
         
     }//GEN-LAST:event_btnEntrarActionPerformed
 
@@ -270,7 +257,7 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_lblLogoGifMouseClicked
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        if(evt.getClickCount() == 2){
+        if(evt.getClickCount() == 1){
             new RecordarContrasena(this, true).setVisible(true);
         }
     }//GEN-LAST:event_jLabel1MouseClicked
@@ -279,7 +266,6 @@ public class Login extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        new Thread(new Cargando()).start();
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -287,7 +273,7 @@ public class Login extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -306,21 +292,54 @@ public class Login extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Login().setVisible(false);
+                new Login().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelDatos;
-    private javax.swing.JPasswordField Password;
-    private javax.swing.JButton btnEntrar;
-    private javax.swing.JButton btnLimpiar;
+    public javax.swing.JPasswordField Password;
+    public javax.swing.JButton btnEntrar;
+    public javax.swing.JButton btnLimpiar;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel lblLogoAplication;
     private javax.swing.JLabel lblLogoGif;
-    private javax.swing.JTextField txtUsuer;
+    private javax.swing.JLabel lblPass;
+    public javax.swing.JLabel lblRelog;
+    private javax.swing.JLabel lblUser;
+    public javax.swing.JTextField txtUsuer;
     // End of variables declaration//GEN-END:variables
+
+ @Override
+    public void run() {
+        Thread ct= Thread.currentThread();
+        
+        while(ct==h1){
+            calcula();
+            lblRelog.setText(fecha+" "+hora+":"+minutos+":"+segundos+" "+ampm);
+            try{
+                Thread.sleep(1000);
+            }catch(InterruptedException e){}
+        }
+        
+        
+    }
+    
+    public void calcula() {
+        Calendar calendario = new GregorianCalendar();
+        java.util.Date fechaHoraActual = new java.util.Date();
+        
+        calendario.setTime(fechaHoraActual);
+        ampm= calendario.get(Calendar.AM_PM)==Calendar.AM?"AM":"PM";
+        
+        if(ampm.equals("PM")){
+            int h=calendario.get(Calendar.HOUR_OF_DAY)-12;
+            hora = h>9?""+h:"0"+h;
+        }else{
+            hora= calendario.get(Calendar.HOUR_OF_DAY)>9?""+calendario.get(Calendar.HOUR_OF_DAY):"0"+calendario.get(Calendar.HOUR_OF_DAY); 
+        }
+        minutos = calendario.get(Calendar.MINUTE)>9?""+calendario.get(Calendar.MINUTE):"0"+calendario.get(Calendar.MINUTE);
+        segundos = calendario.get(Calendar.SECOND)>9?""+calendario.get(Calendar.SECOND):"0"+calendario.get(Calendar.SECOND);
+    }
+
 }

@@ -6,6 +6,13 @@
 package Vista;
 
 import Controlador.*;
+import Model.Conexion;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import javax.swing.JOptionPane;
 
 
@@ -16,35 +23,107 @@ import javax.swing.JOptionPane;
 public class RecordarContrasena extends javax.swing.JDialog {
 
     Correo c=new Correo();
+    static Connection conn = null;
+    static Statement st = null;
+    static ResultSet rs = null;
+    String hora, minutos, segundos, ampm;
+    Calendar calendario;
+    java.util.Date now = new java.util.Date();
+    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd-MM-yy");
+    int validacion;
+    String CorreoIngresado;
+    String fecha = "";
     
     public RecordarContrasena(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
+        fecha = sdf.format(now);
         txtCorreo.grabFocus();
     }
     
-    public void ValidarCorreo(){
-        String CorreoIngresado;
+    public int ValidarCorreo(){
+        
         CorreoIngresado=txtCorreo.getText().trim();
+        validacion=0;
+        
+        String sql="";
+        sql = "SELECT count(id) FROM users WHERE email='"+CorreoIngresado+"' ";
+        
+        try {
+            conn = Conexion.Enlace(conn);
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            if (rs.next()) {
+                
+                validacion=Integer.parseInt(rs.getString(1));
+              
+            }
+            rs.close();
+
+        } catch (SQLException ex) {
+            System.out.println("Error consultado correo " + ex);
+        }
+        
+        return validacion;
+    }
+    
+    public String consultarClave(){
+        String pass="";
+        String sql="";
+        sql = "SELECT password FROM users WHERE email='"+CorreoIngresado+"' ";
+        
+        try {
+            conn = Conexion.Enlace(conn);
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            if (rs.next()) {
+                
+                pass=rs.getString(1);
+              
+            }
+            rs.close();
+
+        } catch (SQLException ex) {
+            System.out.println("Error consultado password " + ex);
+        }
+        return pass;
     }
     
     public void EnviarCorreo(){
+        
+        if(ValidarCorreo()!=1){
+            JOptionPane.showMessageDialog(null, "ERROR no se encontro el correo el la base de datos"
+            , "ERROR al enviar mensaje", JOptionPane.ERROR_MESSAGE);
+        }else{
+        
+            calcula();//la hora y fecha
         c.setContrasena("lkanfgsrldgvplyz");
         c.setUsuarioCorreo("Corposoft10@gmail.com");
-        c.setAsunto("Recordar Contraseña");
-        c.setMensaje("");
-        c.setDestino("");
-        c.setNombreArchivo("image.jpg");
-        c.setRutaArchivo("image.jpg");
+        c.setDestino(CorreoIngresado);
+        c.setAsunto("Recordar Contraseña Corposoft");
+        c.setMensaje("Este correo fue generado automáticamente por la aplicación CORPOSOFT. \n\n\n"
+                + "fecha y hora de generación de la solicitud en la aplicación => "+fecha + "  " + hora + ":" + minutos + ":" + segundos + " " + ampm+" "
+                + "\n\nsi usted no solicitud esta recuperación alguien más lo hizo por usted intentando"
+                + " saber su clave a demás esa persona sabe su correo electrónico tome las medidas de seguridad"
+                + " que estime conveniente \n\nSu clave de acceso es: "+consultarClave()+" guarde esta clave en un lugar seguro");
+        
+        c.setNombreArchivo("");
+        c.setRutaArchivo("");
         
         ControllerCorreo co=new ControllerCorreo();
         if(co.enviarCorreo(c)){
             JOptionPane.showMessageDialog(null, "Mesaje de recuperacion enviado "
-            + "correctamente", "Mensaje Enviado", JOptionPane.INFORMATION_MESSAGE);
+            + "correctamente revisa tu bandeja de entrada", "Mensaje Enviado", JOptionPane.INFORMATION_MESSAGE);
+            txtCorreo.setText(null);
+            dispose();
         }else{
-            JOptionPane.showMessageDialog(null, "ERROR al enviar el mesaje de recuperacion"
+            JOptionPane.showMessageDialog(null, "ERROR al enviar al enviar el mensaje de recuperación "
             , "ERROR al enviar mensaje", JOptionPane.ERROR_MESSAGE);
+        }
+        
         }
     }
     
@@ -67,50 +146,85 @@ public class RecordarContrasena extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Recuperar Contrasena");
-        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtCorreo.setBackground(new java.awt.Color(0, 102, 102));
-        txtCorreo.setFont(new java.awt.Font("Blacksword", 0, 24)); // NOI18N
+        txtCorreo.setFont(new java.awt.Font("Berlin Sans FB Demi", 0, 26)); // NOI18N
         txtCorreo.setForeground(new java.awt.Color(255, 255, 255));
         txtCorreo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCorreoActionPerformed(evt);
             }
         });
-        getContentPane().add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 230, 340, 50));
 
         btnEnviar.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         btnEnviar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/android-send_26x26.png"))); // NOI18N
         btnEnviar.setText("Enviar");
+        btnEnviar.setToolTipText("Enviar correo con la clave de recuperacion");
         btnEnviar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnEnviar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEnviarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnEnviar, new org.netbeans.lib.awtextra.AbsoluteConstraints(400, 290, 130, 40));
 
-        jLabel1.setFont(new java.awt.Font("Impact", 0, 20)); // NOI18N
-        jLabel1.setText("Correo Registrado");
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 240, 170, 40));
+        jLabel1.setFont(new java.awt.Font("Eras Bold ITC", 0, 20)); // NOI18N
+        jLabel1.setText("Correo Registrado:");
 
         lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/icono-recuperar-clave.png"))); // NOI18N
-        getContentPane().add(lblLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 230, 240));
 
-        jLabel2.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Eras Bold ITC", 0, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Recuperar Usuario ");
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(237, 30, 290, 50));
 
-        jLabel3.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Eras Bold ITC", 0, 36)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel3.setText("o");
-        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, 290, -1));
 
-        jLabel4.setFont(new java.awt.Font("Haettenschweiler", 0, 36)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Eras Bold ITC", 0, 36)); // NOI18N
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel4.setText("Contraseña");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 130, 290, -1));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(10, 10, 10)
+                .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(70, 70, 70)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 380, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(520, 520, 520)
+                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCorreo, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20)
+                .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -174,4 +288,22 @@ public class RecordarContrasena extends javax.swing.JDialog {
     private javax.swing.JLabel lblLogo;
     private javax.swing.JTextField txtCorreo;
     // End of variables declaration//GEN-END:variables
+
+
+public void calcula() {
+        Calendar calendario = new GregorianCalendar();
+        java.util.Date fechaHoraActual = new java.util.Date();
+
+        calendario.setTime(fechaHoraActual);
+        ampm = calendario.get(Calendar.AM_PM) == Calendar.AM ? "AM" : "PM";
+
+        if (ampm.equals("PM")) {
+            int h = calendario.get(Calendar.HOUR_OF_DAY) - 12;
+            hora = h > 9 ? "" + h : "0" + h;
+        } else {
+            hora = calendario.get(Calendar.HOUR_OF_DAY) > 9 ? "" + calendario.get(Calendar.HOUR_OF_DAY) : "0" + calendario.get(Calendar.HOUR_OF_DAY);
+        }
+        minutos = calendario.get(Calendar.MINUTE) > 9 ? "" + calendario.get(Calendar.MINUTE) : "0" + calendario.get(Calendar.MINUTE);
+        segundos = calendario.get(Calendar.SECOND) > 9 ? "" + calendario.get(Calendar.SECOND) : "0" + calendario.get(Calendar.SECOND);
+    }
 }

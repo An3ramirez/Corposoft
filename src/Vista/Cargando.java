@@ -5,6 +5,10 @@
  */
 package Vista;
 
+import Controlador.*;
+import Model.*;
+import java.io.*;
+import java.sql.*;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.util.logging.Level;
@@ -17,8 +21,14 @@ import org.edisoncor.gui.util.WindowsUtil;
  * @author an3-r
  */
 public class Cargando extends javax.swing.JFrame implements Runnable{
-    Login fmPrincipal = new Login();
+    
+    Users mod = new Users();
+    ConsultasUsers modC = new ConsultasUsers();
+    Login fmPrincipal = new Login();        
+    CtrlUsers ctrl = new CtrlUsers(mod, modC, fmPrincipal);
+    
     Thread hilo;
+    Metodos MT=new Metodos();
     /**
      * Creates new form Cargando
      */
@@ -26,11 +36,13 @@ public class Cargando extends javax.swing.JFrame implements Runnable{
         getContentPane().setBackground(new java.awt.Color(255,255,255));
         initComponents();
         setLocationRelativeTo(null);
-
+        
+        hilo = new Thread(this);
+        hilo.start();
                 
         txtCreditos.setText("<html><p align=\"justify\">CorpoSoft diseño y programacion por Andres Ramirez, Copyright "
                             + " todos los derechos reservados se prohibe la reproduccion total o parcial de este software"
-                + " Java aplicación Version beta V0.1 2017 contacto Corposoft10@gmail.com</p></html> ");
+                + " Java aplicación Version 2.0 2017 contacto Corposoft10@gmail.com</p></html> ");
         
     }
     
@@ -62,9 +74,9 @@ public class Cargando extends javax.swing.JFrame implements Runnable{
         setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        ProgressBar.setFont(new java.awt.Font("Copperplate Gothic Bold", 0, 14)); // NOI18N
-        ProgressBar.setForeground(new java.awt.Color(51, 0, 204));
-        getContentPane().add(ProgressBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 420, 577, 22));
+        ProgressBar.setFont(new java.awt.Font("MV Boli", 1, 14)); // NOI18N
+        ProgressBar.setForeground(new java.awt.Color(0, 0, 153));
+        getContentPane().add(ProgressBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 412, 577, 30));
 
         lblEstado.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblEstado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -74,8 +86,9 @@ public class Cargando extends javax.swing.JFrame implements Runnable{
         txtCreditos.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         getContentPane().add(txtCreditos, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 440, 550, 64));
 
-        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/banner sofpo.fw.png"))); // NOI18N
-        getContentPane().add(lblLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 0, 410, 330));
+        lblLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Logo_principal_v2.0.png"))); // NOI18N
+        getContentPane().add(lblLogo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 580, 300));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/loader_48x48.gif"))); // NOI18N
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 330, -1, -1));
@@ -94,19 +107,19 @@ public class Cargando extends javax.swing.JFrame implements Runnable{
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Administrador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Administrador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Administrador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Administrador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(User.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -138,42 +151,42 @@ public class Cargando extends javax.swing.JFrame implements Runnable{
             for(int i=0; i<=100; i++ ){
                
                ProgressBar.setValue(i);
-               hilo.sleep(50); //tiempo de espera en segundos multiplicado por el numero 1 del ciclo for
-               if(i==10){
+               hilo.sleep(40); //tiempo de espera en segundos multiplicado por el numero 1 del ciclo for
+               if(i==50){
                    lblEstado.setText("Cargando Interfaz Grafica.");
-                   Thread.sleep(1000);
-                   
-               }else if(i==12){
-                   lblEstado.setText("Cargando Interfaz Grafica..");
-                   Thread.sleep(1200);
-                   
-               }else if(i==14){
-                   lblEstado.setText("Cargando Interfaz Grafica...");
-                   Thread.sleep(900);
-                   
-               }else if(i==21){
-                   lblEstado.setText("Cargando Librerias");
-                   Thread.sleep(1200);
-                   
-               }else if(i==34){
-                   lblEstado.setText("Cargando TimingFramework");
-                   Thread.sleep(1000);
-                   
-               }else if(i==48){
-                   lblEstado.setText("Cargando Paquetes");
-                   
+                   Thread.sleep(300);
                    
                }else if(i==52){
+                   lblEstado.setText("Cargando Interfaz Grafica..");
+                   Thread.sleep(300);
+                   
+               }else if(i==54){
+                   lblEstado.setText("Cargando Interfaz Grafica...");
+                   Thread.sleep(300);
+                   
+               }else if(i==60){
+                   lblEstado.setText("Cargando Librerias");
+                   Thread.sleep(800);
+                   
+               }else if(i==65){
+                   lblEstado.setText("Cargando TimingFramework");
+                   Thread.sleep(200);
+                   
+               }else if(i==70){
+                   lblEstado.setText("Cargando Paquetes");
+                   Thread.sleep(200);
+                   
+               }else if(i==73){
                    lblEstado.setText("Acediendo a la base de datos");
                    Thread.sleep(500);
                    lblEstado.setText("Interfas colingnigt");
-               }else if(i==66){
+               }else if(i==75){
                    lblEstado.setText("Leyendo Informacion");
                    
                    
-               }else if(i==82){
+               }else if(i==80){
                    lblEstado.setText("Cargando Bibliotecas");
-                   Thread.sleep(800);
+                   Thread.sleep(700);
                    
                }else if(i==85){
                    lblEstado.setText("Iniciando.");
@@ -182,37 +195,57 @@ public class Cargando extends javax.swing.JFrame implements Runnable{
                    
                }else if(i==86){
                    lblEstado.setText("Iniciando..");
-                   Thread.sleep(500);
+                   Thread.sleep(300);
                    
                    
                }else if(i==87){
                    lblEstado.setText("Iniciando...");
-                   Thread.sleep(500);
+                   Thread.sleep(200);
                    
                    
                }else if(i==88){
                    lblEstado.setText("Iniciando.");
-                   Thread.sleep(500);
+                   Thread.sleep(200);
                    
                    
                }else if(i==89){
                    lblEstado.setText("Iniciando..");
-                   Thread.sleep(500);
+                   Thread.sleep(200);
                    
                    
                }else if(i==90){
                    lblEstado.setText("Iniciando...");
+                   Thread.sleep(200);
+                   
+                   
+               }else if(i==100){
                    Thread.sleep(500);
-                   
-                   
                }
             }
             
         } catch (InterruptedException ex) {
-            Logger.getLogger(Cargando.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Error "+ex);
         }
         this.dispose();//Ocultar ventana
-        fmPrincipal.setVisible(true);//mostar ventana principal
+        int diasint=MT.SerialDias();
+        if(diasint<=0 && MT.Validacion()==0){
+            new Licencia( this, true).setVisible(true);
+        }else{
+        
+        if(MT.InicioAplication()>0){
+            
+           fmPrincipal.setVisible(true);//mostar ventana principal 
+        }else{
+            Registro RG=new Registro();
+            
+            fmPrincipal.setVisible(true);
+            RG.setVisible(true);
+        }
+        if(MT.Validacion()==0){
+             new Licencia( this, true).setVisible(true);
+        }
+        }
+        
         
        
     }

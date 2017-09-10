@@ -1,0 +1,11 @@
+·         Texto = lo dejamos vacío
+·         Borde = le quitamos el borde
+·         BorderPainted = desmarcamos la casilla
+·         ContentAreaFilled = desmarcamos la casilla
+·         FocusPainted = desmarcamos la casilla.
+
+º	“icon” y elegimos la imagen “acep-norm” 
+
+º	“pressedIcon” elegimos la imagen “acep-press” 
+
+º	“rolloverIcon” seleccionamos la imagen de “acep-roll” 

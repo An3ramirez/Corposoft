@@ -1,0 +1,1 @@
+SELECT round((cl.salary)*(0.010925),0) FROM clients cl, arl ar where cl.id=1 AND ar.id=cl.risk_id;

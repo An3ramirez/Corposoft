@@ -36,7 +36,7 @@ public class Egreso extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         txtDetalle = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        btn_guardar = new javax.swing.JButton();
         txtValor = new javax.swing.JTextField();
         txtTitulo = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -52,9 +52,14 @@ public class Egreso extends javax.swing.JDialog {
 
         txtDetalle.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/guardar-archivo26x26px.png"))); // NOI18N
-        jButton2.setText("Guardar");
-        jButton2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_guardar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Guardar/save_norm.png"))); // NOI18N
+        btn_guardar.setBorder(null);
+        btn_guardar.setBorderPainted(false);
+        btn_guardar.setContentAreaFilled(false);
+        btn_guardar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn_guardar.setFocusPainted(false);
+        btn_guardar.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Guardar/save_press.png"))); // NOI18N
+        btn_guardar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Guardar/save_roll.png"))); // NOI18N
 
         txtValor.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
 
@@ -83,10 +88,12 @@ public class Egreso extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(txtTitulo)
-                    .addComponent(txtDetalle))
+                    .addComponent(txtDetalle)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btn_guardar)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -100,15 +107,12 @@ public class Egreso extends javax.swing.JDialog {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtDetalle, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(41, 41, 41)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtValor, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(4, 4, 4)
+                .addComponent(btn_guardar)
                 .addContainerGap())
         );
 
@@ -129,7 +133,7 @@ public class Egreso extends javax.swing.JDialog {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 516, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 110, Short.MAX_VALUE)
                         .addComponent(jLabel2)
                         .addGap(21, 21, 21))))
         );
@@ -159,7 +163,7 @@ public class Egreso extends javax.swing.JDialog {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -191,15 +195,15 @@ public class Egreso extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton2;
+    public javax.swing.JButton btn_guardar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField txtDetalle;
-    private javax.swing.JTextField txtTitulo;
-    private javax.swing.JTextField txtValor;
+    public javax.swing.JTextField txtDetalle;
+    public javax.swing.JTextField txtTitulo;
+    public javax.swing.JTextField txtValor;
     // End of variables declaration//GEN-END:variables
 }

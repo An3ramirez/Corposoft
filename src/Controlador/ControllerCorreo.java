@@ -61,7 +61,7 @@ public class ControllerCorreo {
             return true;
             
         } catch (Exception e) {
-            System.out.println("Error "+e);
+            System.out.println("Error enviando correo "+e);
           return false;  
         }
         

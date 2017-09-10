@@ -1,0 +1,44 @@
+Instalar
+1. mysql-connector-odbc-5.1.8-win32 (Para agregar un controlador de odbc a la maquina)
+2. mysql-5.5.11-win32 (Instala MySql) <----Ojo
+2.1 Hacer la instalacion normal y fijate que antes de darle en finalizar este activada la unica casilla que hay "Launch the MySQL Instance Configuration Wizard"
+2.2 En la nueva ventana que se muestra elegir el modo de instalacion Standar Configuration
+2.3 Activar las casillas "Launch the MySQL server automatically" e "Include Bin Directory in Windows PATH"
+2.4 En Root password vas a escribir "root" y tambien activas la casilla "Enable root access from remote machines"
+2.5 Pulsar en Execute con eso hay que esperar que se realize el analisis
+3- MySQL-Front_Setup (Es un manejador de base de datos)
+
+---- Creas tu base de datos en MySQL Front y con eso tienes en parte configurado tu servidor--
+
+bueno a tus equipos clientes le vas a instalar las primeras dos aplicaciones pero vas a omitir 2.4 la parte donde se activa la casilla
+
+ahora para terminar tienes que abrir los puertos del Firewall yo los tengo en Windows 7,
+
+1.-abro la ventana del firewall
+2.-pulso sobre la opcion configuracion avanzada
+3.-le doy clic a reglas de entrada
+4.-Eliges nueva regla
+5.-Pulsas sobre puerto + siguiente
+6.-Escribes el numero de puerto de MySQL por defecto es 3306 + siguiente
+7.-Pulsas siguiente, siguiente, le das un nombre mas finalizar
+
+Esto lo haces con todas tus maquinas hasta con el servidor
+
+bueno para conectar tu base de datos desde otros equipos haces lo siguiente
+
+1.-Te vas a Panel de control
+2.-Eliges Herramientas administrativas
+3.-Origenes de Datos ODBC
+4.-Despues DSN de Sistema + Agregar
+5.-de la lista te vas hasta lo ultimo MySQL ODBC 5.1 + Finalizar
+5.1. Data Source Name: "El nombre que le quieras dar a tu conexion
+5.2 TCP/IP Server : "Va la direccion IP del Servidor Ejemplo en mi caso es 192.168.1.7"
+5.3 User: "root"
+5.4 Password: "root"
+5.5 Database: "pulsar sobre la flecha del combo y esperar un momento y si todo lo hiciste al pie de la letra se van a mostrar todas las bases de datos que tienes en tu servidor"
+
+Nota. si quieres puedes Testear tu conexion y todo esta bien
+
+Y LISTO A DISFRUTAR DE TUS CONEXIONES LAN
+
+mi correo es gaspar862701@hotmail.com

@@ -4,10 +4,16 @@
  * and open the template in the editor.
  */
 package Vista;
+import Model.*;
+import com.sun.glass.events.KeyEvent;
 import java.util.*;
 import java.io.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 
 /**
  *
@@ -28,6 +34,8 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
  java.text.SimpleDateFormat("dd-MM-yy");
  
  String fecha;
+ int opcionSelect;
+ boolean FiltroBus=false;
 
     /**
      * Creates new form Estadisticas
@@ -41,8 +49,142 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
         fecha=sdf.format(now);
         h1 = new Thread(this);
         h1.start();
+        opcionSelect=0;
     }
     
+    void mostrarEgresos(){
+        
+        cBoxFiltro.removeAllItems();
+        cBoxFiltro.addItem("Buscar por");
+        cBoxFiltro.addItem("id");
+        cBoxFiltro.addItem("title");
+        cBoxFiltro.addItem("detail");
+        cBoxFiltro.addItem("value");
+        cBoxFiltro.addItem("Users_id");
+        
+        if(!"Buscar por".equals(cBoxFiltro.getSelectedItem().toString())){
+          FiltroBus=true;  
+          System.out.println("Entro al if");
+        }
+          
+        String busqueda = txtBuscar.getText();
+        String filtro = cBoxFiltro.getSelectedItem().toString();
+        String where = "";
+        if(!"".equals(busqueda))
+        {
+            where = "WHERE "+filtro+" LIKE '" + busqueda +"%'";
+        }
+        DefaultTableModel modelo= new DefaultTableModel();
+        modelo.addColumn("ID REGISTRO");
+        modelo.addColumn("TITULO");
+        modelo.addColumn("DETALLE");
+        modelo.addColumn("VALOR $");
+        modelo.addColumn("ID USUARIO");
+        
+        jTable1.setModel(modelo);
+        String sql="";
+        
+            sql="SELECT id, title, detail, value, Users_id FROM expenditures "+where+" ORDER BY id ";
+        
+        
+        
+        String []datos = new String [5];
+     try {
+         conn=Conexion.Enlace(conn);
+         Statement st = conn.createStatement();
+         
+         ResultSet rs= st.executeQuery(sql);
+         ResultSetMetaData rsMd = rs.getMetaData();
+         int cantidadColumnas = rsMd.getColumnCount();
+         
+         int[] anchos = {60,200,480,70,50};
+        
+        for (int i = 0; i < cantidadColumnas; i++) 
+        {
+             jTable1.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
+        }
+         
+         while(rs.next()){
+             datos[0]=rs.getString(1);
+             datos[1]=rs.getString(2);
+             datos[2]=rs.getString(3);
+             datos[3]=rs.getString(4);
+             datos[4]=rs.getString(5);
+             modelo.addRow(datos);
+         }
+         jTable1.setModel(modelo);
+     } catch (SQLException ex) {
+         System.out.println("Error consultado egresos "+ex);
+     }
+     
+     //consultando el total
+     try {
+        conn=Conexion.Enlace(conn);
+         Statement st = conn.createStatement();
+         
+         ResultSet rs= st.executeQuery("SELECT sum(value) FROM expenditures ");
+         rs.next();
+         
+         txtTotal.setText("$ "+rs.getString(1));
+         
+         
+        
+    } catch (Exception e) {
+    }
+     
+     
+    }
+    
+    void mostrarFacturacion(){
+        DefaultTableModel modelo= new DefaultTableModel();
+        modelo.addColumn("Nº FACTURA");
+        modelo.addColumn("NOMBRES");
+        modelo.addColumn("Nº DOCUMENTO");
+        modelo.addColumn("FECHA");
+        modelo.addColumn("VALOR");
+        
+        jTable1.setModel(modelo);
+        String sql="";
+        
+            sql="SELECT * FROM bill ORDER BY id ";
+        
+        
+        
+        String []datos = new String [5];
+     try {
+         conn=Conexion.Enlace(conn);
+         Statement st = conn.createStatement();
+         
+         ResultSet rs= st.executeQuery(sql);
+         while(rs.next()){
+             datos[0]=rs.getString(1);
+             datos[1]=rs.getString(2);
+             datos[2]=rs.getString(3);
+             datos[3]=rs.getString(4);
+             datos[4]=rs.getString(5);
+             modelo.addRow(datos);
+         }
+         jTable1.setModel(modelo);
+     } catch (SQLException ex) {
+         System.out.println("Error consultado las facturas "+ex);
+     }
+     
+     //consultando el total
+     try {
+        conn=Conexion.Enlace(conn);
+         Statement st = conn.createStatement();
+         
+         ResultSet rs= st.executeQuery("SELECT sum(valor) FROM bill ");
+         rs.next();
+         
+         txtTotal.setText("$ "+rs.getString(1));
+         
+         
+        
+    } catch (Exception e) {
+    }
+     
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -69,6 +211,8 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
         lblAnimacion = new javax.swing.JLabel();
         lblTotal = new javax.swing.JLabel();
         txtTotal = new javax.swing.JTextField();
+        txtBuscar = new javax.swing.JTextField();
+        cBoxFiltro = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Estadisticas");
@@ -85,7 +229,7 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
 
         lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Estadistica_80x80px.png"))); // NOI18N
 
-        jTable1.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        jTable1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -106,15 +250,28 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(300);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setPreferredWidth(300);
+            jTable1.getColumnModel().getColumn(3).setPreferredWidth(250);
+        }
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED), "Opciones", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.TOP));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED), "Opciones", javax.swing.border.TitledBorder.RIGHT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 14))); // NOI18N
 
-        cBoxItemBusqueda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Todos los Registros", "Registros Hoy", "Entre Fechas", "Solo Ingresos", "Solo Egresos" }));
+        cBoxItemBusqueda.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        cBoxItemBusqueda.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione un opción", "Egresos", "Facturación" }));
         cBoxItemBusqueda.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/search_32.png"))); // NOI18N
-        btnBuscar.setText("Buscar");
+        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Comprobar/comprobar_norm.png"))); // NOI18N
+        btnBuscar.setBorderPainted(false);
+        btnBuscar.setContentAreaFilled(false);
         btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscar.setFocusPainted(false);
+        btnBuscar.setPressedIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Comprobar/comprobar_press.png"))); // NOI18N
+        btnBuscar.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/IconosMejorados/Comprobar/comprobar_roll.png"))); // NOI18N
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -165,20 +322,22 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(cBoxItemBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnBuscar))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(185, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cBoxItemBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBuscar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnBuscar)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cBoxItemBusqueda))
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10))
         );
@@ -203,8 +362,19 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
         txtTotal.setBackground(new java.awt.Color(0, 102, 102));
         txtTotal.setFont(new java.awt.Font("Orator Std", 0, 36)); // NOI18N
         txtTotal.setForeground(new java.awt.Color(102, 255, 0));
-        txtTotal.setText("$ 45000");
+        txtTotal.setText("$ 0");
         txtTotal.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        txtBuscar.setBackground(new java.awt.Color(0, 102, 102));
+        txtBuscar.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        txtBuscar.setForeground(new java.awt.Color(255, 255, 255));
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyTyped(evt);
+            }
+        });
+
+        cBoxFiltro.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -219,13 +389,19 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 344, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(55, 55, 55)
                                 .addComponent(lblRelog, javax.swing.GroupLayout.PREFERRED_SIZE, 505, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(cBoxFiltro, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 398, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                                 .addComponent(lblAnimacion)
                                 .addGap(62, 62, 62)))
-                        .addComponent(lblLogo))
+                        .addComponent(lblLogo)
+                        .addGap(41, 41, 41))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(layout.createSequentialGroup()
@@ -234,8 +410,7 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
                                 .addGap(18, 18, 18)
                                 .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane1))
-                        .addGap(38, 38, 38)))
-                .addContainerGap())
+                        .addGap(48, 48, 48))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -248,11 +423,16 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
                             .addComponent(lblRelog))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblAnimacion)))
+                            .addComponent(lblAnimacion)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cBoxFiltro, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)))))
                     .addComponent(lblLogo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblTotal)
@@ -264,7 +444,13 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
-        // TODO add your handling code here:
+        if(cBoxItemBusqueda.getSelectedItem()=="Egresos"){
+            mostrarEgresos();
+            opcionSelect=1;
+        }else if(cBoxItemBusqueda.getSelectedItem()=="Facturación"){
+            mostrarFacturacion();
+            opcionSelect=2;
+        }
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void lblAnimacionKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_lblAnimacionKeyTyped
@@ -282,6 +468,27 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
+    private void txtBuscarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyTyped
+        char cTeclaPresionada=evt.getKeyChar();
+        
+        if(cTeclaPresionada!=KeyEvent.VK_ALT){
+            if(opcionSelect==1){
+                System.out.println("Valor del combo "+cBoxFiltro.getSelectedItem().toString());
+                if(FiltroBus){
+                   mostrarEgresos();
+            
+                }else{
+                    JOptionPane.showMessageDialog(null,"No a seleccionado un ítem de búsqueda", "Error no hay ítem seleccionado", JOptionPane.ERROR_MESSAGE); 
+                }
+            
+        }else if(opcionSelect==2){
+            mostrarFacturacion();
+        }
+       }
+        
+        
+    }//GEN-LAST:event_txtBuscarKeyTyped
+
     /**
      * @param args the command line arguments
      */
@@ -293,7 +500,7 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -327,6 +534,7 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.toedter.calendar.JDateChooser DateChooserIni;
     private javax.swing.JButton btnBuscar;
+    private javax.swing.JComboBox<String> cBoxFiltro;
     private javax.swing.JComboBox<String> cBoxItemBusqueda;
     private com.toedter.calendar.JDateChooser jDateChooserFinal;
     private javax.swing.JLabel jLabel1;
@@ -340,6 +548,7 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
     private javax.swing.JLabel lblLogo;
     private javax.swing.JLabel lblRelog;
     private javax.swing.JLabel lblTotal;
+    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtTotal;
     // End of variables declaration//GEN-END:variables
 
@@ -348,6 +557,7 @@ public class Estadisticas extends javax.swing.JDialog implements Runnable{
          Thread ct= Thread.currentThread();
         
         while(ct==h1){
+            
             calcula();
             lblRelog.setText(fecha+"  "+hora+":"+minutos+":"+segundos+" "+ampm);
             try{

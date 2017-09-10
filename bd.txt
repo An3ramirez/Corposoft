@@ -1,4 +1,8 @@
 pass: 4529
+Serial: H1K45-45SDS-G4D8S-Q3MZY
+
+192.168.0.13 direcion ip servidor
+user: estrada
 
 CREATE TABLE login (
 id_user VARCHAR2(20) NOT NULL,
@@ -16,5 +20,31 @@ genero VARCHAR2(10) NOT NULL,
 telefono VARCHAR2(15) NOT NULL,
 email VARCHAR2(35);
 
+//modificaciones base de datos
+
+CREATE TABLE IF NOT EXISTS `dbCorposoft`.`Expenditures` (
+  `id` INT(11) NOT NULL,
+  `title` VARCHAR(45) NOT NULL,
+  `detail` VARCHAR(90) NULL,
+  `value` DECIMAL(20) NOT NULL,
+  `Users_id` INT(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `pk_aggressive_idx` (`Users_id` ASC),
+  CONSTRAINT `pk_aggressive`
+    FOREIGN KEY (`Users_id`)
+    REFERENCES `dbCorposoft`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
 INSERT INTO login values('1116257972','User', 'Felipe1245','4/03/17');
 INSERT INTO login values('1116257972','Admin', 'Felipe1234','4/03/17');
+
+SELECT TO_DAYS( fecha1) - TO_DAYS( fecha2) AS dias
+FROM mitabla ORDER BY dias DESC;
+
+fecha actual insertar//
+fecha y hora => NOW() solo fecha => CURRENT_DATE solo hora => select curTime();
+
+tratamiento de fecha mysql=> http://www.cristalab.com/tutoriales/fechas-con-mysql-c84136l/
+cambiar idioma de fechas => https://dev.mysql.com/doc/refman/5.7/en/locale-support.html

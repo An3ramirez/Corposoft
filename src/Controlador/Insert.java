@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Controlador;
+import Model.Conexion;
 import java.io.*;
 import java.sql.*;
 import javax.swing.*;
@@ -51,7 +52,7 @@ public class Insert {
          
         }catch (Exception e){
             
-            JOptionPane.showMessageDialog(null,"A ocurrido un error al guardar los datos\nEl error arrojado por el sisyema es\n"+e);
+            JOptionPane.showMessageDialog(null,"A ocurrido un error al guardar los datos\nEl error arrojado por el sistema es\n"+e);
         }
        return Mensaje;
         

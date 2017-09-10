@@ -5,7 +5,7 @@
  */
 package Reporte;
 
-import Controlador.Conexion;
+import Model.Conexion;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;

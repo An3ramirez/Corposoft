@@ -1,0 +1,52 @@
+10:56:37 IOException receive via TCPIPConnection
+10:56:37 Exception: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.io.BufferedInputStream.read1(Unknown Source)
+	at java.io.BufferedInputStream.read(Unknown Source)
+	at com.logica.smpp.TCPIPConnection.receive(TCPIPConnection.java:416)
+	at com.logica.smpp.ReceiverBase.receivePDUFromConnection(ReceiverBase.java:242)
+	at com.logica.smpp.Receiver.receiveAsync(Receiver.java:388)
+	at com.logica.smpp.ReceiverBase.process(ReceiverBase.java:129)
+	at com.logica.smpp.util.ProcessingThread.run(ProcessingThread.java:196)
+	at java.lang.Thread.run(Unknown Source)
+
+10:56:37 Receiver.receiveAsync()
+10:56:37 Exception: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.io.BufferedInputStream.read1(Unknown Source)
+	at java.io.BufferedInputStream.read(Unknown Source)
+	at com.logica.smpp.TCPIPConnection.receive(TCPIPConnection.java:416)
+	at com.logica.smpp.ReceiverBase.receivePDUFromConnection(ReceiverBase.java:242)
+	at com.logica.smpp.Receiver.receiveAsync(Receiver.java:388)
+	at com.logica.smpp.ReceiverBase.process(ReceiverBase.java:129)
+	at com.logica.smpp.util.ProcessingThread.run(ProcessingThread.java:196)
+	at java.lang.Thread.run(Unknown Source)
+
+01:01:36 IOException receive via TCPIPConnection
+01:01:36 Exception: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.io.BufferedInputStream.read1(Unknown Source)
+	at java.io.BufferedInputStream.read(Unknown Source)
+	at com.logica.smpp.TCPIPConnection.receive(TCPIPConnection.java:416)
+	at com.logica.smpp.ReceiverBase.receivePDUFromConnection(ReceiverBase.java:242)
+	at com.logica.smpp.Receiver.receiveAsync(Receiver.java:388)
+	at com.logica.smpp.ReceiverBase.process(ReceiverBase.java:129)
+	at com.logica.smpp.util.ProcessingThread.run(ProcessingThread.java:196)
+	at java.lang.Thread.run(Unknown Source)
+
+01:01:36 Receiver.receiveAsync()
+01:01:36 Exception: java.net.SocketException: Connection reset
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.net.SocketInputStream.read(Unknown Source)
+	at java.io.BufferedInputStream.read1(Unknown Source)
+	at java.io.BufferedInputStream.read(Unknown Source)
+	at com.logica.smpp.TCPIPConnection.receive(TCPIPConnection.java:416)
+	at com.logica.smpp.ReceiverBase.receivePDUFromConnection(ReceiverBase.java:242)
+	at com.logica.smpp.Receiver.receiveAsync(Receiver.java:388)
+	at com.logica.smpp.ReceiverBase.process(ReceiverBase.java:129)
+	at com.logica.smpp.util.ProcessingThread.run(ProcessingThread.java:196)
+	at java.lang.Thread.run(Unknown Source)
+
