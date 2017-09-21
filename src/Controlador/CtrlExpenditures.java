@@ -50,7 +50,7 @@ public class CtrlExpenditures implements ActionListener {
 
             if (modC.registrar(mod)) {
                 JOptionPane.showMessageDialog(null, "Se guardo la informacion", "Exito", JOptionPane.INFORMATION_MESSAGE);
-                limpiar();
+                limpiar();                
             } else {
                 JOptionPane.showMessageDialog(null, "Hubo un error al guardar", "Error", JOptionPane.ERROR_MESSAGE);
             }

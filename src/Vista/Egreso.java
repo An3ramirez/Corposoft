@@ -21,6 +21,7 @@ public class Egreso extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         this.setLocationRelativeTo(null);
+        jPanel2.setVisible(false);
         btn_editar.setVisible(false);
         txtTitulo.grabFocus();
     }
