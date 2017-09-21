@@ -17,6 +17,7 @@ import java.util.ArrayList;
  * @author Daniel Granobles
  */
 public class ConsultasExpenditures extends Conexion {
+    Metodos MT=new Metodos();
 
     public boolean registrar(Expenditures Exp) {
         try {
@@ -35,6 +36,8 @@ public class ConsultasExpenditures extends Conexion {
 
         } catch (Exception e) {
             System.out.println("Error Registrar Expenditures " + e);
+            //esta linea permite el envio de correos con los errores
+            MT.saveErrors("Error Registrar Expenditures " + e);
             return false;
         } finally {
             try {
@@ -57,6 +60,7 @@ public class ConsultasExpenditures extends Conexion {
             
         } catch (Exception e) {
             System.out.println("Error Actualizar Expenditures " + e);
+            MT.saveErrors("Error Actualizar Expenditures " + e);
             return false;
         } finally {
             try {

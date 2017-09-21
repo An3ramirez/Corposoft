@@ -27,6 +27,8 @@ public class BarAnimacion extends javax.swing.JDialog {
         initComponents();
         
         
+        
+        
     }
     
     public void img_up(){
@@ -318,10 +320,7 @@ public class BarAnimacion extends javax.swing.JDialog {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        int valEps=32100;
         
-        valEps=(valEps/30)*2 ;
-        System.out.println("Valor es "+valEps);
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
