@@ -106,6 +106,7 @@ public class CtrlExpenditures implements ActionListener {
             return false;
         }};
         tablaexpenditures.setModel(modelot);
+        tablaexpenditures.setRowHeight(25);
         
         modelot.addColumn("Id");
         modelot.addColumn("Titulo");
