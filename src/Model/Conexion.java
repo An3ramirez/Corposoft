@@ -15,7 +15,7 @@ public class Conexion {
     
     static String bd="mysql";
     static String login="root";
-    static String password="4529";
+    static String password="daniel";
     static String url="jdbc:mysql://localhost:3306/dbcorposoft";
     
     

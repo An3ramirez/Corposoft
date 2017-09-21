@@ -8,7 +8,7 @@ import java.io.*;
 import java.sql.*;
 /**
  *
- * @author an3-r
+ * @author Daniel Granobles
  */
 public class Egreso extends javax.swing.JDialog {
     static Connection conn=null;

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author an3-r
+ * @author Daniel Granobles
  */
 public class ConsultasExpenditures extends Conexion {
 
