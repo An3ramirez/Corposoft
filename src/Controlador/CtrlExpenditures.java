@@ -16,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  *
- * @author an3-r
+ * @author daniel_granobles
  */
 public class CtrlExpenditures implements ActionListener {
 
